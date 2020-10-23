@@ -57,6 +57,7 @@ public class WordReader extends BaseRichSpout {
 		}finally{
 			completed = true;
 		}
+		System.out.println("madouTest#read completed,"+Thread.currentThread().getName());
 	}
 
 	/**

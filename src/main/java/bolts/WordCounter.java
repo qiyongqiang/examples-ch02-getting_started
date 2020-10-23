@@ -11,48 +11,52 @@ import backtype.storm.tuple.Tuple;
 
 public class WordCounter extends BaseBasicBolt {
 
-	Integer id;
-	String name;
-	Map<String, Integer> counters;
+    Integer id;
+    String name;
+    Map<String, Integer> counters;
 
-	/**
-	 * At the end of the spout (when the cluster is shutdown
-	 * We will show the word counters
-	 */
-	@Override
-	public void cleanup() {
-		System.out.println("-- Word Counter ["+name+"-"+id+"] --");
-		for(Map.Entry<String, Integer> entry : counters.entrySet()){
-			System.out.println(entry.getKey()+": "+entry.getValue());
-		}
-	}
+    /**
+     * At the end of the spout (when the cluster is shutdown
+     * We will show the word counters
+     */
+    @Override
+    public void cleanup() {
+        System.out.println("-- Word Counter [" + name + "-" + id + "] --");
+        for (Map.Entry<String, Integer> entry : counters.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+        System.out.println("madouTest#WordCounter#cleanup ,"+Thread.currentThread().getName());
+    }
 
-	/**
-	 * On create 
-	 */
-	@Override
-	public void prepare(Map stormConf, TopologyContext context) {
-		this.counters = new HashMap<String, Integer>();
-		this.name = context.getThisComponentId();
-		this.id = context.getThisTaskId();
-	}
+    /**
+     * On create
+     */
+    @Override
+    public void prepare(Map stormConf, TopologyContext context) {
+        this.counters = new HashMap<String, Integer>();
+        this.name = context.getThisComponentId();
+        this.id = context.getThisTaskId();
+    }
 
-	@Override
-	public void declareOutputFields(OutputFieldsDeclarer declarer) {}
+    @Override
+    public void declareOutputFields(OutputFieldsDeclarer declarer) {
+    }
 
 
-	@Override
-	public void execute(Tuple input, BasicOutputCollector collector) {
-		String str = input.getString(0);
-		/**
-		 * If the word dosn't exist in the map we will create
-		 * this, if not We will add 1 
-		 */
-		if(!counters.containsKey(str)){
-			counters.put(str, 1);
-		}else{
-			Integer c = counters.get(str) + 1;
-			counters.put(str, c);
-		}
-	}
+    @Override
+    public void execute(Tuple input, BasicOutputCollector collector) {
+        String str = input.getString(0);
+        System.out.println("madouTest#WordCounter#str " + str + ", " + Thread.currentThread().getName());
+        /**
+         * If the word dosn't exist in the map we will create
+         * this, if not We will add 1
+         */
+        if (!counters.containsKey(str)) {
+            counters.put(str, 1);
+        } else {
+            Integer c = counters.get(str) + 1;
+            counters.put(str, c);
+        }
+        System.out.println("-- Word Counter str --" + str + counters.get(str));
+    }
 }
