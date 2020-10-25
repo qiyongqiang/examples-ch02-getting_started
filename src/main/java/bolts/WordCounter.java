@@ -1,13 +1,13 @@
 package bolts;
 
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.BasicOutputCollector;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseBasicBolt;
+import org.apache.storm.tuple.Tuple;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.BasicOutputCollector;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseBasicBolt;
-import backtype.storm.tuple.Tuple;
 
 public class WordCounter extends BaseBasicBolt {
 
@@ -25,7 +25,7 @@ public class WordCounter extends BaseBasicBolt {
         for (Map.Entry<String, Integer> entry : counters.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
-        System.out.println("madouTest#WordCounter#cleanup ,"+Thread.currentThread().getName());
+        System.out.println("madouTest#WordCounter#cleanup ," + Thread.currentThread().getName());
     }
 
     /**
@@ -37,11 +37,6 @@ public class WordCounter extends BaseBasicBolt {
         this.name = context.getThisComponentId();
         this.id = context.getThisTaskId();
     }
-
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-    }
-
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
@@ -58,5 +53,10 @@ public class WordCounter extends BaseBasicBolt {
             counters.put(str, c);
         }
         System.out.println("-- Word Counter str --" + str + counters.get(str));
+    }
+
+    @Override
+    public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
+
     }
 }
